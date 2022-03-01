@@ -1,0 +1,234 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "PixelSERP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API Request": {
+      "main": [
+        []
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PixelSERP": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-03-01T13:02:54.910Z",
+  "id": "4",
+  "name": "Selector",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "176552e8-6a81-44c0-9f44-f82e61a2c279",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "webhookId": "176552e8-6a81-44c0-9f44-f82e61a2c279"
+    },
+    {
+      "parameters": {
+        "url": "=http://34.246.135.245:8080/pixelserp/{{encodeURI(decodeURI(decodeURI($json[\"headers\"][\"query\"])))}}",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": []
+        },
+        "queryParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "API Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        640,
+        100
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "var selector =$node[\"Webhook\"].json[\"headers\"][\"selector\"];\n\nconsole.log(selector)\n\nvar path = selector;\nvar getter = new Function(\"$json\", \"return $json.\" + path + \";\");\n\n\nreturn [\n  {\n    json: {\n      data : [[getter($json)]]\n    } \n    \n  }\n];"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "update",
+        "sheetId": "={{$node[\"Webhook\"].json[\"headers\"][\"sheetid\"]}}",
+        "range": "={{$node[\"Webhook\"].json[\"headers\"][\"sheetname\"]}}!{{$node[\"Webhook\"].json[\"headers\"][\"column\"]}}{{Number.parseFloat($node[\"Webhook\"].json[\"headers\"][\"row\"]).toFixed()}}:{{$node[\"Webhook\"].json[\"headers\"][\"column\"]}}{{Number.parseFloat($node[\"Webhook\"].json[\"headers\"][\"row\"]).toFixed()}}",
+        "rawData": true,
+        "options": {}
+      },
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        380
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"error\"][\"name\"]}}",
+              "value2": "Error"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        840,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "update",
+        "sheetId": "={{$node[\"Webhook\"].json[\"headers\"][\"sheetid\"]}}",
+        "range": "={{$node[\"Webhook\"].json[\"headers\"][\"sheetname\"]}}!{{$node[\"Webhook\"].json[\"headers\"][\"column\"]}}{{Number.parseFloat($node[\"Webhook\"].json[\"headers\"][\"row\"]).toFixed()}}:{{$node[\"Webhook\"].json[\"headers\"][\"column\"]}}{{Number.parseFloat($node[\"Webhook\"].json[\"headers\"][\"row\"]).toFixed()}}",
+        "rawData": true,
+        "options": {}
+      },
+      "name": "Google Sheets1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        220
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "\nreturn [\n  {\n    json: {\n      data : [[\"There was an Error\"]]\n    } \n    \n  }\n];"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getSingle",
+        "keywords": "={{decodeURIComponent($json[\"headers\"][\"query\"])}}",
+        "additionalFields": {}
+      },
+      "name": "PixelSERP",
+      "type": "n8n-nodes-base.pixelSERP",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ],
+      "credentials": {
+        "pixelSERPApi": {
+          "id": "1",
+          "name": "PixelSERP account"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-03-01T14:02:44.966Z"
+}
