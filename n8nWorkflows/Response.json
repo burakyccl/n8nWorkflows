@@ -1,0 +1,257 @@
+{
+  "active": true,
+  "connections": {
+    "Item Lists4": {
+      "main": [
+        [
+          {
+            "node": "Key : Value Matching2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key : Value Matching2": {
+      "main": [
+        [
+          {
+            "node": "Add Data 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Data 2": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split up1": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Item Lists4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches1": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Split up1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-03-01T13:03:17.684Z",
+  "id": "5",
+  "name": "Response",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "limit",
+        "maxItems": "=10"
+      },
+      "name": "Item Lists4",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "URL",
+              "value": "={{$json[\"link\"][\"url\"]}}"
+            },
+            {
+              "name": "Domain",
+              "value": "={{$json[\"link\"][\"visibleText\"]}}"
+            },
+            {
+              "name": "Title",
+              "value": "={{$json[\"title\"]}}"
+            },
+            {
+              "name": "Description",
+              "value": "={{$node[\"API Request1\"].json[\"results\"][1][\"description\"]}}"
+            },
+            {
+              "name": "Date",
+              "value": "={{$node[\"Date\"].json[\"requestDate\"]}}"
+            }
+          ],
+          "number": [
+            {
+              "name": "Type",
+              "value": "={{$json[\"type\"]}}"
+            },
+            {
+              "name": "Position",
+              "value": "={{$json[\"order\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Key : Value Matching2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "sheetId": "={{$node[\"Webhook\"].json[\"headers\"][\"sheetid\"]}}",
+        "range": "={{$node[\"SplitInBatches1\"].json[\"searchSuggestions\"][\"footer\"][0]}}!A:G",
+        "options": {}
+      },
+      "name": "Add Data 2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "const newItems = [];\nfor (const item of items[0].json.body) {\n  newItems.push({json: item});\n}\nreturn newItems;"
+      },
+      "name": "Split up1",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        640,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        300
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "SplitInBatches1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        840,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d5bf34f3-ba26-49c5-a012-6fab79cfd893",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "webhookId": "d5bf34f3-ba26-49c5-a012-6fab79cfd893"
+    },
+    {
+      "parameters": {
+        "functionCode": "var nowDate = new Date().toLocaleString('tr-TR', { timeZone: 'Turkey' })\n\n//items[0].json.requestDate = nowDate;\n\nitems.unshift({json : {requestDate : nowDate}})\n\n\nreturn items;"
+      },
+      "name": "Date",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        640,
+        120
+      ],
+      "typeVersion": 1,
+      "executeOnce": true
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-03-01T13:38:07.187Z"
+}
