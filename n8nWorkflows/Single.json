@@ -1,0 +1,662 @@
+{
+  "active": false,
+  "connections": {
+    "API Request1": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists2": {
+      "main": [
+        [
+          {
+            "node": "Item Lists3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists3": {
+      "main": [
+        [
+          {
+            "node": "Key : Value Matching",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key : Value Matching": {
+      "main": [
+        [
+          {
+            "node": "Add Data 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Data 1": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Keywords": {
+      "main": [
+        [
+          {
+            "node": "EmptyParamCheck",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create New Sheets": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key Row Set": {
+      "main": [
+        [
+          {
+            "node": "Convert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Key Row to Sheets": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Read Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "Add Key Row to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches1": {
+      "main": [
+        [
+          {
+            "node": "API Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Key Row Set",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Item Lists2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Key : Value Matching1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key : Value Matching1": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Data ": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "Add Data ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EmptyParamCheck": {
+      "main": [
+        [
+          {
+            "node": "Create New Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-03-01T13:02:35.608Z",
+  "id": "3",
+  "name": "Single",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://141.95.102.63:8080/pixelserp/{{encodeURI($json[\"title\"])}}",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": []
+        },
+        "queryParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "API Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        480
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "name": "Item Lists2",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        480
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "limit",
+        "maxItems": "={{$node[\"Webhook\"].json[\"headers\"][\"searchlength\"]}}"
+      },
+      "name": "Item Lists3",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "URL",
+              "value": "={{$json[\"link\"][\"url\"]}}"
+            },
+            {
+              "name": "Domain",
+              "value": "={{$json[\"link\"][\"visibleText\"]}}"
+            },
+            {
+              "name": "Title",
+              "value": "={{$json[\"title\"]}}"
+            },
+            {
+              "name": "Description",
+              "value": "={{$node[\"API Request1\"].json[\"results\"][1][\"description\"]}}"
+            }
+          ],
+          "number": [
+            {
+              "name": "Type",
+              "value": "={{$json[\"type\"]}}"
+            },
+            {
+              "name": "Position",
+              "value": "={{$json[\"order\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Key : Value Matching",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        480
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "functionCode": "return [\n  {\n    json: {\n      data: [ $json.rows.split(',') ]\n    }\n  }\n];\n"
+      },
+      "name": "Convert",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "sheetId": "={{$node[\"Webhook\"].json[\"headers\"][\"sheetid\"]}}",
+        "range": "={{$node[\"SplitInBatches1\"].json[\"title\"]}}!A:F",
+        "options": {}
+      },
+      "name": "Add Data 1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        2840,
+        480
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "multiplex"
+      },
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "sheetId": "={{$node[\"Webhook\"].json[\"headers\"][\"sheetid\"]}}",
+        "range": "A:C",
+        "options": {}
+      },
+      "name": "Read Keywords",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        640,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "create",
+        "sheetId": "={{$item(0).$node[\"Webhook\"].json[\"headers\"][\"sheetid\"]}}",
+        "options": {
+          "tabColor": "#C4002A",
+          "title": "={{$json[\"Keyword\"]}}"
+        }
+      },
+      "name": "Create New Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        300
+      ],
+      "retryOnFail": false,
+      "notesInFlow": false,
+      "maxTries": 3,
+      "waitBetweenTries": 500,
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "rows",
+              "value": "Position,Type,URL,Domain,Title,Description,"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Key Row Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "update",
+        "sheetId": "={{$item(0).$node[\"Webhook\"].json[\"headers\"][\"sheetid\"]}}",
+        "range": "={{$json[\"title\"] }}!A1:G1",
+        "rawData": true,
+        "options": {}
+      },
+      "name": "Add Key Row to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        2600,
+        260
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "4d0720e1-9c47-4528-8fa8-9d4f63a51f70",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        300
+      ],
+      "webhookId": "4d0720e1-9c47-4528-8fa8-9d4f63a51f70"
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "SplitInBatches1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"error\"]}}",
+              "operation": "notEqual",
+              "value2": "Bad request - please check your parameters"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"error\"][\"name\"]}}",
+              "operation": "notEqual",
+              "value2": "Error"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "URL",
+              "value": "There Was a"
+            },
+            {
+              "name": "Domain",
+              "value": "Problem With"
+            },
+            {
+              "name": "Title",
+              "value": "Request!!!"
+            },
+            {
+              "name": "Description",
+              "value": "Please Delete The Sheet and Try Again."
+            }
+          ],
+          "number": [
+            {
+              "name": "Type"
+            },
+            {
+              "name": "Position",
+              "value": 404
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Key : Value Matching1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        700
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "sheetId": "={{$node[\"Webhook\"].json[\"headers\"][\"sheetid\"]}}",
+        "range": "={{$node[\"SplitInBatches1\"].json[\"title\"]}}!A:F",
+        "options": {}
+      },
+      "name": "Add Data ",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        700
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "for (item of items) {\n  console.log(item.json.Language)\n  if (item.json.Language === '' || item.json.Language == null){\n    item.json.Language = \"en\"\n  }\n  if(item.json.Location === '' || item.json.Location == null){\n    item.json.Location = \"gb\"\n  }\n}\n\nreturn items;"
+      },
+      "name": "EmptyParamCheck",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        840,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2022-03-01T13:02:48.560Z"
+}
