@@ -1,5 +1,5 @@
 {
-  "active": false,
+  "active": true,
   "connections": {
     "dataArray": {
       "main": [
@@ -147,17 +147,6 @@
         ]
       ]
     },
-    "Daily @ 20:00": {
-      "main": [
-        [
-          {
-            "node": "Globals",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "OneAtATime": {
       "main": [
         [
@@ -184,6 +173,17 @@
           }
         ]
       ]
+    },
+    "Daily @ 18:00": {
+      "main": [
+        [
+          {
+            "node": "Globals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2022-03-01T13:36:48.007Z",
@@ -197,7 +197,7 @@
       "typeVersion": 1,
       "position": [
         240,
-        300
+        280
       ]
     },
     {
@@ -214,7 +214,7 @@
     },
     {
       "parameters": {
-        "url": "http://localhost:8443/rest/workflows",
+        "url": "http://localhost:5678/rest/workflows",
         "options": {}
       },
       "name": "N8N Workflows",
@@ -264,7 +264,7 @@
     },
     {
       "parameters": {
-        "url": "=http://localhost:8443/rest/workflows/{{$json[\"id\"]}}",
+        "url": "=http://localhost:5678/rest/workflows/{{$json[\"id\"]}}",
         "options": {}
       },
       "name": "N8N Workflow Detail",
@@ -396,25 +396,6 @@
     },
     {
       "parameters": {
-        "triggerTimes": {
-          "item": [
-            {
-              "hour": 20,
-              "minute": 11
-            }
-          ]
-        }
-      },
-      "name": "Daily @ 20:00",
-      "type": "n8n-nodes-base.cron",
-      "position": [
-        300,
-        420
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
         "batchSize": 1,
         "options": {}
       },
@@ -432,15 +413,15 @@
           "string": [
             {
               "name": "repo.owner",
-              "value": "octocat"
+              "value": "burakyccl"
             },
             {
               "name": "repo.name",
-              "value": "Hello-World"
+              "value": "n8nWorkflows"
             },
             {
               "name": "repo.path",
-              "value": "my-team/n8n/workflows/"
+              "value": "n8nWorkflows/"
             }
           ]
         },
@@ -453,10 +434,29 @@
         280
       ],
       "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 18,
+              "minute": 11
+            }
+          ]
+        }
+      },
+      "name": "Daily @ 18:00",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        260,
+        100
+      ],
+      "typeVersion": 1
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2022-03-01T14:30:31.589Z"
+  "updatedAt": "2022-03-01T14:43:01.253Z"
 }
